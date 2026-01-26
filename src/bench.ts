@@ -65,7 +65,7 @@ export const printout = (benchmarks: Benchmarks): void => {
     let output: string = '';
 
     for (const benchmark of benchmarks) {
-        stdout.write('\x1b[32;1m' + benchmark[0] + ':\x1b[0m\n');
+        output += '\x1b[32;1m' + benchmark[0] + ':\x1b[0m\n';
 
         const result = benchmark[1]();
 
@@ -94,12 +94,13 @@ export const getMarkdown = (benchmarks: Benchmarks): string => {
     let markdown = '';
 
     for (const benchmark of benchmarks) {
-        markdown += '- ' + benchmark[0] + ':\n';
+        markdown += '## ' + benchmark[0] + '\n';
 
         const result = benchmark[1]();
 
         for (const name in result) {
-            markdown += MARKDOWN_GAP + '- ' + name + ': ' + result[name] + '\n';
+            markdown +=
+                MARKDOWN_GAP + '- ### ' + name + ': ' + result[name] + '\n';
         }
     }
 

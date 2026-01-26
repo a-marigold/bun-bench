@@ -29,3 +29,15 @@ export const warmup = (iterations: number = 1_000_000) => {
 export const initBenches = (): Benchmarks => {
     return new Map();
 };
+
+/**
+ * Concats `value` with 'ms' string
+ *
+ *
+ * @param value value to be concatinated with 'ms'
+ *
+ * @returns concatinated string
+ */
+export const formatMs = (value: number | string): string => {
+    return value + 'ms';
+};
