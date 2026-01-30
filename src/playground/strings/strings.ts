@@ -88,4 +88,32 @@ addBench(
     benches,
 );
 
+addBench(
+    'Array.prototype.join vs String concatenation',
+    () => {
+        const iterations = 1_000_000;
+
+        const conc1 = getNow();
+        let concatinated: string = '';
+        for (let i = 0; i < iterations; i++) {
+            concatinated += i;
+        }
+        const conc2 = getNow();
+
+        const join1 = getNow();
+        const array: string[] = [];
+        for (let i = 0; i < iterations; i++) {
+            array[array.length] = i.toString();
+        }
+        array.join();
+        const join2 = getNow();
+
+        return {
+            'Array.prototype.join': formatMs(join2 - join1),
+            'String concatenation': formatMs(conc2 - conc1),
+        };
+    },
+    benches,
+);
+
 printout(benches);

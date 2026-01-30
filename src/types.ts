@@ -1,5 +1,29 @@
+/**
+ * The result of `Benchmark.callback` call.
+ *
+ *
+ */
 export type BenchmarkResult = { [name: string]: string };
 
-export type Benchmark = () => BenchmarkResult;
+export type Benchmark<DetailsK extends string, DetailsT> = {
+    callback: BenchmarkCallback<DetailsK, DetailsT>;
+    details?: BenchmarkDetails<DetailsK, DetailsT>;
+};
 
-export type Benchmarks = Map<string, Benchmark>;
+export type Benchmarks = Map<string, Benchmark<string, never>>;
+
+export type BenchmarkCallback<DetailsK extends string, DetailsT = never> = [
+    DetailsT,
+] extends [never]
+    ? () => BenchmarkResult
+    : (details: BenchmarkDetails<DetailsK, DetailsT>) => BenchmarkResult;
+
+/**
+ *
+ * Details object of benchmark
+ */
+export type BenchmarkDetails<K extends string, T = never> = [T] extends [never]
+    ? undefined
+    : {
+          [name in K]: T;
+      };

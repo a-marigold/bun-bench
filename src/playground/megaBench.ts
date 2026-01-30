@@ -61,36 +61,9 @@ const rightShiftVsMathFloor = (): BenchmarkResult => {
     };
 };
 
-const preIncVsPostInc = (): BenchmarkResult => {
-    warmup();
-
-    let megaNumber1 = 0;
-
-    const pre1 = getNow();
-    for (let i = 0; i < 1_000_000; ++i) {
-        ++megaNumber1;
-    }
-    const pre2 = getNow();
-
-    warmup();
-
-    let megaNumber2 = 0;
-
-    const post1 = getNow();
-    for (let i = 0; i < 1_000_000; i++) {
-        megaNumber2++;
-    }
-    const post2 = getNow();
-
-    return {
-        'pre increment': pre2 - pre1 + 'ms',
-        'post increment': post2 - post1 + 'ms',
-    };
-};
 const benchmarks = initBenches();
 
-addBench('spread vs concat', spreadVsConcat, benchmarks);
+addBench('spread vs concat', spreadVsConcat, benchmarks, { abc: '' });
 addBench('`>>` vs Math.floor', rightShiftVsMathFloor, benchmarks);
-addBench('pre increment vs post increment', preIncVsPostInc, benchmarks);
 
 printout(benchmarks);

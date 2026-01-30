@@ -2,19 +2,19 @@ import { stdout } from 'bun';
 
 import { PRINT_GAP, MARKDOWN_GAP } from './constants';
 
-import type { BenchmarkResult, Benchmark, Benchmarks } from './types';
+import type { Benchmark, Benchmarks } from './types';
 
 /**
  * #### Appends benchmark to the list of benchmarks.
  *
- *
+ *s
  *
  *
  *
  *
  *
  * @param name - Name of the benchmark
- * @param benchmark - Benchmark callback that returns `BenchmarkResult`
+ * @param callback - Benchmark callback that returns `BenchmarkResult`
  *
  * @example
  *
@@ -35,13 +35,16 @@ import type { BenchmarkResult, Benchmark, Benchmarks } from './types';
  *   return result;
  * }
  * ```
+ *
  */
-export const addBench = (
+export const addBench = <DetailsK extends string, DetailsT = never>(
     name: string,
-    benchmark: Benchmark,
+    callback: Benchmark<DetailsK, DetailsT>['callback'],
+
     benchmarks: Benchmarks,
+    details?: Benchmark<DetailsK, DetailsT>['details'],
 ): void => {
-    benchmarks.set(name, benchmark);
+    benchmarks.set(name, { callback, details } as Benchmark<string, never>);
 };
 
 /**
@@ -67,7 +70,7 @@ export const printout = (benchmarks: Benchmarks): void => {
     for (const benchmark of benchmarks) {
         output += '\x1b[32;1m' + benchmark[0] + ':\x1b[0m\n';
 
-        const result = benchmark[1]();
+        const result = benchmark[1].callback(benchmark[1].details);
 
         for (const name in result) {
             output +=
@@ -86,7 +89,10 @@ export const printout = (benchmarks: Benchmarks): void => {
 /**
  * #### generates markdown from `benchmarks`
  *
+ *
  * @param benchmarks `Map` with benchmarks
+ *
+ *
  *
  * @returns generated markdown from `benchmarks` as string
  */
@@ -106,3 +112,6 @@ export const getMarkdown = (benchmarks: Benchmarks): string => {
 
     return markdown;
 };
+
+// TODO: types
+addBench('', (a) => ({ b: a.b }), new Map());
