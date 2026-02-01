@@ -1,15 +1,16 @@
-# bench
+# <p align='center'> hydraulic </p>
 
-To install dependencies:
+Tool for javascript benchmarks.
 
-```bash
-bun install
-```
+### Supported output formats
 
-To run:
+- Markdown
+- stdout
 
-```bash
-bun run index.ts
-```
+### Compatibility
 
-This project was created using `bun init` in bun v1.3.6. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+- Browsers
+- Bun
+- Node
+
+- Deno
