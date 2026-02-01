@@ -1,9 +1,10 @@
 {
     "name": "bun-bench",
+    "version": "1.0.0",
     "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
     "type": "module",
-    "private": true,
+    "private": false,
     "readme": "./README.md",
     "description": "Tool for benchmaring of JS code",
     "files": [
@@ -12,7 +13,9 @@
     "main": "./dist/index.js",
     "scripts": {
         "lint": "biome check",
-        "build": "rollup -c"
+        "build": "rollup -c",
+        "prepublishOnly": "bun run build",
+        "pshPublic": "bun publish --access public"
     },
     "devDependencies": {
         "@biomejs/biome": "^2.3.11",
