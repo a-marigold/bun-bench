@@ -16,4 +16,4 @@ Tool for javascript benchmarks.
 - Deno
 
 
-[See the benchmarks] (https://github.com/a-marigold/hydraulic/benchmarks/result.md)
+[See the benchmarks](https://github.com/a-marigold/hydraulic/benchmarks/)
