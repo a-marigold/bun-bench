@@ -2,6 +2,13 @@
 
 Tool for javascript benchmarks.
 
+### Installation
+
+```bash
+# npm, yarn, bun
+bun add hydraulic
+```
+
 ### Supported output formats
 
 - Markdown
@@ -14,6 +21,5 @@ Tool for javascript benchmarks.
 - Bun
 - Node
 - Deno
-
 
 [See the benchmarks](https://github.com/a-marigold/hydraulic/benchmarks/)
