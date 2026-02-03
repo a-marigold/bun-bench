@@ -3,7 +3,13 @@ import { stdout as processStdout } from 'node:process';
 
 import { PRINT_GAP } from './constants';
 
-import type { Benchmark, Benchmarks, UnknownBenchmarkDetails } from './types';
+import type {
+    Benchmark,
+    Benchmarks,
+    OnlyBenchmarks,
+    OutputFunction,
+    UnknownBenchmarkDetails,
+} from './types';
 
 const writeToStdout = (bunStdout?.write as unknown)
     ? (data: string) => bunStdout.write(data)
@@ -61,7 +67,8 @@ export const addBench = <DetailsK extends string, DetailsT = never>(
  *
  * #### outputs the results of benchmarks to stdout
  *
- * @param benchmarks `Map` with benchmarks
+ * @param benchmarks `Map` with benchmarks to run
+ * @param only Names of benchmarks to be run
  *
  * @example
  *
@@ -74,43 +81,53 @@ export const addBench = <DetailsK extends string, DetailsT = never>(
  * printout(benchmarks); // this will print the result of benchmarks to stdout
  * ```
  */
-export const printout = (benchmarks: Benchmarks): void => {
+export const printout: OutputFunction<void> = (benchmarks, only): void => {
     let output: string = '';
 
     const nestedPrintGap: string = PRINT_GAP + PRINT_GAP;
 
+    let isOnlyMode = false;
+    for (const _onlyName in only) {
+        isOnlyMode = true;
+        break;
+    }
+
     for (const benchmarkItem of benchmarks) {
-        output += '\x1b[32;1m' + benchmarkItem[0] + ':\x1b[0m\n';
+        const benchmarkName = benchmarkItem[0];
 
-        const benchmark = benchmarkItem[1];
+        if (!isOnlyMode || (only as OnlyBenchmarks)[benchmarkName]) {
+            output += '\x1b[32;1m' + benchmarkItem[0] + ':\x1b[0m\n';
 
-        const result = benchmark.callback(
-            benchmark.details as UnknownBenchmarkDetails,
-        );
-        const details = benchmark.details;
+            const benchmark = benchmarkItem[1];
 
-        if (details) {
-            output += PRINT_GAP + '\x1b[35mdetails:\x1b[0m\n';
+            const result = benchmark.callback(
+                benchmark.details as UnknownBenchmarkDetails,
+            );
+            const details = benchmark.details;
 
-            for (const name in details) {
+            if (details) {
+                output += PRINT_GAP + '\x1b[35mdetails:\x1b[0m\n';
+
+                for (const name in details) {
+                    output +=
+                        nestedPrintGap +
+                        name +
+                        ': \x1b[36m' +
+                        JSON.stringify(details[name], null, PRINT_GAP) +
+                        '\x1b[0m\n';
+                }
+            }
+
+            output += PRINT_GAP + '\x1b[31mresult:\x1b[0m\n';
+
+            for (const name in result) {
                 output +=
                     nestedPrintGap +
                     name +
                     ': \x1b[36m' +
-                    JSON.stringify(details[name], null, PRINT_GAP) +
+                    result[name] +
                     '\x1b[0m\n';
             }
-        }
-
-        output += PRINT_GAP + '\x1b[31mresult:\x1b[0m\n';
-
-        for (const name in result) {
-            output +=
-                nestedPrintGap +
-                name +
-                ': \x1b[36m' +
-                result[name] +
-                '\x1b[0m\n';
         }
     }
     writeToStdout(output);
@@ -127,7 +144,10 @@ export const printout = (benchmarks: Benchmarks): void => {
  *
  * @returns generated markdown from `benchmarks` as string
  */
-export const getMarkdown = (benchmarks: Benchmarks): string => {
+export const getMarkdown: OutputFunction<string> = (
+    benchmarks,
+    only,
+): string => {
     let markdown = '';
 
     for (const benchmarkItem of benchmarks) {

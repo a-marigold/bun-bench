@@ -5,7 +5,7 @@ import dts from 'rollup-plugin-dts';
 
 import terser from '@rollup/plugin-terser';
 
-export default defineConfig(
+export default defineConfig([
     {
         input: './src/index.ts',
 
@@ -18,9 +18,9 @@ export default defineConfig(
 
         plugins: [
             typescript({
-                exclude: ['**__tests__/**', '**/*.test.ts'],
+                tsconfig: './tsconfig.json',
 
-                declaration: false,
+                exclude: ['**__tests__/**', '**/*.test.ts'],
             }),
             terser(),
         ],
@@ -39,4 +39,4 @@ export default defineConfig(
 
         plugins: [dts()],
     },
-);
+]);

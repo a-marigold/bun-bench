@@ -36,6 +36,34 @@ addBench(
 );
 
 addBench(
+    '`>= 1` vs `> 0`',
+    (details) => {
+        const iterations = details.iterations;
+
+        let gtI = 0;
+        const gt1 = getNow();
+        while (gtI > 0) {
+            gtI--;
+        }
+        const gt2 = getNow();
+
+        let gteI = iterations;
+        const gte1 = getNow();
+        while (gteI >= 1) {
+            gteI--;
+        }
+        const gte2 = getNow();
+
+        return {
+            '>=': formatMs(gte2 - gte1),
+            '>': formatMs(gt2 - gt1),
+        };
+    },
+    benches,
+    { iterations: 1_000_000 },
+);
+
+addBench(
     'pre increment vs post increment',
     () => {
         warmup();
@@ -57,6 +85,7 @@ addBench(
         for (let i = 0; i < 1_000_000; i++) {
             megaNumber2++;
         }
+
         const post2 = getNow();
 
         return {
@@ -64,6 +93,7 @@ addBench(
             'post increment': post2 - post1 + 'ms',
         };
     },
+
     benches,
 );
 
